@@ -1,4 +1,4 @@
-public class Customer {
+public final class Customer {
 	private String username;
 	public static final int USERNAME_MAX_LENGTH = 20;
 	public String getUsername() {
@@ -30,7 +30,7 @@ public class Customer {
 		}
 	}
 	public static boolean isValidPassword(String password) {
-		return password != null && password.length == PASSWORD_LENGTH;
+		return password != null && password.length() == PASSWORD_LENGTH;
 	}
 	
 	private String salt;
@@ -47,7 +47,7 @@ public class Customer {
 		}
 	}
 	public static boolean isValidSalt(String salt) {
-		return salt != null && salt.length == SALT_LENGTH;
+		return salt != null && salt.length() == SALT_LENGTH;
 	}
 	
 	private String phone;
@@ -64,7 +64,7 @@ public class Customer {
 		}
 	}
 	public static boolean isValidPhone(String phone) {
-		return phone != null && phone.length == PHONE_LENGTH;
+		return phone != null && phone.length() == PHONE_LENGTH;
 	}
 	
 	private String email;
@@ -84,7 +84,7 @@ public class Customer {
 		}
 	}
 	public static boolean isValidEmail(String email) {
-		return email == null || email.length <= EMAIL_LENGTH;
+		return email == null || email.length() <= EMAIL_LENGTH;
 	}
 	
 	private String address;
@@ -101,7 +101,7 @@ public class Customer {
 		}
 	}
 	public static boolean isValidAddress(String address) {
-		return address != null && address.length <= ADDRESS_LENGTH;
+		return address != null && address.length() <= ADDRESS_LENGTH;
 	}
 	
 	private InternetPackage internetPackage;
