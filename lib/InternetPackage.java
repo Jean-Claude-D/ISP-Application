@@ -31,5 +31,53 @@ public final class InternetPackage {
 		return this.description != null;
 	}
 	
+	private double speedUploadMbps;
+	public double getSpeedUploadMbps() {
+		return this.speedUploadMbps;
+	}
+	public void setSpeedUploadMbps(double speedUploadMbps) {
+		this.speedUploadMbps = speedUploadMbps;
+	}
 	
+	private double speedDownloadMbps;
+	public double getSpeedDownloadMbps() {
+		return this.speedDownloadMbps;
+	}
+	public void setSpeedDownloadMbps(double speedDownloadMbps) {
+		this.speedDownloadMbps = speedDownloadMbps;
+	}
+	
+	private double bandwidthGb;
+	public double getBandwidthGb() {
+		return this.bandwidthGb;
+	}
+	public void setBandwidthGb(double bandwidthGb) {
+		this.bandwidthGb = bandwidthGb;
+	}
+	
+	private double monthlyPrice;
+	public double getMonthlyPrice() {
+		return this.monthlyPrice;
+	}
+	public void setMonthlyPrice(double monthlyPrice) {
+		this.monthlyPrice = monthlyPrice;
+	}
+	
+	private overageCostPgb;
+	public double getOverageCostPgb() {
+		return this.overageCostPgb;
+	}
+	public void setOverageCostPgb(double overageCostPgb) {
+		this.overageCostPgb = overageCostPgb;
+	}
+	
+	public InternetPackage(name, description, speedUploadMbps, speedDownloadMbps, bandwidthGb, monthlyPrice, overageCostPgb) {
+		setName(name);
+		setDescription(description);
+		setSpeedUploadMbps(speedUploadMbps);
+		setSpeedDownloadMbps(speedDownloadMbps);
+		setBandwidthGb(bandwidthGb);
+		setMonthlyPrice(monthlyPrice);
+		setOverageCostPgb(overageCostPgb);
+	}
 }
