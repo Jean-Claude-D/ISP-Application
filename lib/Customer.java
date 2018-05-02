@@ -128,7 +128,6 @@ public final class Customer {
 		}
 	}
 	
-	
 	private boolean active;
 	public boolean isActive() {
 		return this.active;
@@ -140,7 +139,15 @@ public final class Customer {
 		this.active = active == '1';
 	}
 	
-	public Customer(String username, String password, String salt, String phone, String email, String address, InternetPackage internetPackage, long createdDate, boolean active) {
+	private PayingInfo payingInfo;
+	public PayingInfo getPayingInfo() {
+		return this.payingInfo;
+	}
+	public void setPayingInfo(PayingInfo payingInfo) {
+		this.payingInfo = payingInfo;
+	}
+	
+	public Customer(String username, String password, String salt, String phone, String email, String address, InternetPackage internetPackage, long createdDate, boolean active, PayingInfo payingInfo) {
 		setUsername(username);
 		setPassword(password);
 		setSalt(salt);
@@ -150,5 +157,6 @@ public final class Customer {
 		setInternetPackage(internetPackage);
 		setCreatedDate(createdDate);
 		setActive(active);
+		setPayingInfo(payingInfo);
 	}
 }
