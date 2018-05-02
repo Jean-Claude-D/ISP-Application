@@ -1,3 +1,8 @@
+package lib;
+
+import java.util.List;
+import java.util.ArrayList;
+
 public final class InternetPackage {
 	private String name;
 	public static final int MAX_NAME_LENGTH = 40;
@@ -63,7 +68,7 @@ public final class InternetPackage {
 		this.monthlyPrice = monthlyPrice;
 	}
 	
-	private overageCostPgb;
+	private double overageCostPgb;
 	public double getOverageCostPgb() {
 		return this.overageCostPgb;
 	}
@@ -71,7 +76,36 @@ public final class InternetPackage {
 		this.overageCostPgb = overageCostPgb;
 	}
 	
-	public InternetPackage(name, description, speedUploadMbps, speedDownloadMbps, bandwidthGb, monthlyPrice, overageCostPgb) {
+	private List<ExtraFeature> extraFeatures;
+	public void addExtraFeature(ExtraFeature extraFeature) {
+		if(extraFeature == null) {
+			throw new IllegalArgumentException("Cannot add extraFeature to :\nnull\nIs null extraFeature");
+		}
+		
+		this.extraFeatures.add(new ExtraFeature(extraFeature));
+	}
+	public List<ExtraFeature> getExtraFeatures() {
+		List<ExtraFeature> extraFeatures = new ArrayList<ExtraFeature>(this.extraFeatures.size());
+		
+		for(ExtraFeature extraFeature : this.extraFeatures) {
+			extraFeatures.add(new ExtraFeature(extraFeature));
+		}
+		
+		return extraFeatures;
+	}
+	private void setExtraFeatures(List<ExtraFeature> extraFeatures) {
+		if(extraFeatures == null) {
+			throw new IllegalArgumentException("Cannot add extraFeatures to :\nnull\nIs null extraFeatures");
+		}
+		
+		this.extraFeatures = new ArrayList<ExtraFeature>(extraFeatures.size());
+		
+		for(ExtraFeature extraFeature : extraFeatures) {
+			this.extraFeatures.add(new ExtraFeature(extraFeature));
+		}
+	}
+	
+	public InternetPackage(String name, String description, double speedUploadMbps, double speedDownloadMbps, double bandwidthGb, double monthlyPrice, double overageCostPgb, List<ExtraFeature> extraFeatures) {
 		setName(name);
 		setDescription(description);
 		setSpeedUploadMbps(speedUploadMbps);
@@ -79,5 +113,10 @@ public final class InternetPackage {
 		setBandwidthGb(bandwidthGb);
 		setMonthlyPrice(monthlyPrice);
 		setOverageCostPgb(overageCostPgb);
+		setExtraFeatures(extraFeatures);
+	}
+	
+	public InternetPackage(InternetPackage internetPackage) {
+		this(internetPackage.name, internetPackage.description, internetPackage.speedUploadMbps, internetPackage.speedDownloadMbps, internetPackage.bandwidthGb, internetPackage.monthlyPrice, internetPackage.overageCostPgb, internetPackage.extraFeatures);
 	}
 }

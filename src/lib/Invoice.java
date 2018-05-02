@@ -5,7 +5,7 @@ public final class Invoice {
 	public int getId() {
 		return this.Id;
 	}
-	public int setId(int Id) {
+	public void setId(int Id) {
 		this.Id = Id;
 	}
 	
@@ -13,11 +13,11 @@ public final class Invoice {
 	public Invoice getPrevious() {
 		return this.previous;
 	}
-	public void setPrevious(Invoice invoice) {
-		this.invoice = invoice;
+	public void setPrevious(Invoice previous) {
+		this.previous = previous;
 	}
 	public boolean hasPrevious() {
-		return this.invoice != null;
+		return this.previous != null;
 	}
 	
 	private Customer customer;
@@ -48,10 +48,10 @@ public final class Invoice {
 	}
 	public void setDueDate(long dueDate) {
 		if(DbLib.isValidDate(dueDate)) {
-			this.dueDate = duedate;
+			this.dueDate = dueDate;
 		}
 		else {
-			throw new IllegalArgumentException("Cannot set dueDate to :\n" + (dueDate == null ? "null" : dueDate) + "\nIs invalid dueDate");
+			throw new IllegalArgumentException("Cannot set dueDate to :\n" + dueDate + "\nIs invalid dueDate");
 		}
 	}
 	
@@ -64,16 +64,16 @@ public final class Invoice {
 			this.createdDate = createdDate;
 		}
 		else {
-			throw new IllegalArgumentException("Cannot set createdDate to :\n" + (createdDate == null ? "null" : createdDate) + "\nIs invalid createdDate");
+			throw new IllegalArgumentException("Cannot set createdDate to :\n" + createdDate + "\nIs invalid createdDate");
 		}
 	}
 	
 	private Balance balance;
 	public Balance getBalance() {
-		return this.balance;
+		return new Balance(this.balance);
 	}
 	public void setBalance(Balance balance) {
-		this.balance = balance;
+		this.balance = new Balance(balance);
 	}
 	
 	public Invoice(int Id, Invoice previous, Customer customer, InternetPackage internetPackage, long dueDate, long createdDate, Balance balance) {

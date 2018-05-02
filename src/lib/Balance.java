@@ -5,7 +5,7 @@ public final class Balance {
 	public int getId() {
 		return this.Id;
 	}
-	public int setId(int Id) {
+	public void setId(int Id) {
 		this.Id = Id;
 	}
 	
@@ -13,7 +13,7 @@ public final class Balance {
 	public double getSubTotal() {
 		return this.subTotal;
 	}
-	public double setSubTotal(double subTotal) {
+	public void setSubTotal(double subTotal) {
 		this.subTotal = subTotal;
 	}
 	
@@ -21,7 +21,7 @@ public final class Balance {
 	public double getTotal() {
 		return this.total;
 	}
-	public double setTotal(double total) {
+	public void setTotal(double total) {
 		this.total = total;
 	}
 	
@@ -29,5 +29,9 @@ public final class Balance {
 		setId(Id);
 		setSubTotal(subTotal);
 		setTotal(total);
+	}
+	
+	public Balance(Balance balance) {
+		this(balance.Id, balance.subTotal, balance.total);
 	}
 }

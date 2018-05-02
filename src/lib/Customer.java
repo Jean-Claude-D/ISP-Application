@@ -1,3 +1,8 @@
+package lib;
+
+import java.util.List;
+import java.util.ArrayList;
+
 public final class Customer {
 	private String username;
 	public static final int USERNAME_MAX_LENGTH = 20;
@@ -119,12 +124,12 @@ public final class Customer {
 	public long getCreatedDate() {
 		return this.createdDate;
 	}
-	public long setCreatedDate(long createdDate) {
+	public void setCreatedDate(long createdDate) {
 		if(DbLib.isValidDate(createdDate)) {
 			this.createdDate = createdDate;
 		}
 		else {
-			throw new IllegalArgumentException("Cannot set createdDate to :\n" + (createdDate == null ? "null" : createdDate) + "\nIs invalid createdDate");
+			throw new IllegalArgumentException("Cannot set createdDate to :\n" + createdDate + "\nIs invalid createdDate");
 		}
 	}
 	
@@ -141,13 +146,41 @@ public final class Customer {
 	
 	private PayingInfo payingInfo;
 	public PayingInfo getPayingInfo() {
-		return this.payingInfo;
+		return (hasPayingInfo() ? new PayingInfo(this.payingInfo) : null);
 	}
 	public void setPayingInfo(PayingInfo payingInfo) {
-		this.payingInfo = payingInfo;
+		this.payingInfo = (hasPayingInfo() ? new PayingInfo(payingInfo) : null);
+	}
+	public boolean hasPayingInfo() {
+		return this.payingInfo != null;
 	}
 	
-	public Customer(String username, String password, String salt, String phone, String email, String address, InternetPackage internetPackage, long createdDate, boolean active, PayingInfo payingInfo) {
+	private List<DailyUsage> dailyUsages;
+	public void addDailyUsage(DailyUsage dailyUsage) {
+		if(dailyUsage == null) {
+			throw new IllegalArgumentException("Cannot add dailyUsage to :\nnull\nIs null dailyUsage");
+		}
+		
+		this.dailyUsages.add(new DailyUsage(dailyUsage));
+	}
+	public List<DailyUsage> getDailyUsages() {
+		List<DailyUsage> dailyUsages = new ArrayList<DailyUsage>(this.dailyUsages);
+		
+		for(DailyUsage dailyUsage : this.dailyUsages) {
+			dailyUsages.add(dailyUsage);
+		}
+		
+		return dailyUsages;
+	}
+	private void setDailyUsages(List<DailyUsage> dailyUsages) {
+		this.dailyUsages = new ArrayList<DailyUsage>(dailyUsages.size());
+		
+		for(DailyUsage dailyUsage : dailyUsages) {
+			this.dailyUsages.add(dailyUsage);
+		}
+	}
+	
+	public Customer(String username, String password, String salt, String phone, String email, String address, InternetPackage internetPackage, long createdDate, boolean active, PayingInfo payingInfo, List<DailyUsage> dailyUsages) {
 		setUsername(username);
 		setPassword(password);
 		setSalt(salt);
@@ -158,5 +191,6 @@ public final class Customer {
 		setCreatedDate(createdDate);
 		setActive(active);
 		setPayingInfo(payingInfo);
+		setDailyUsages(dailyUsages);
 	}
 }
