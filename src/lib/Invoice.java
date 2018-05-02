@@ -9,17 +9,6 @@ public final class Invoice {
 		this.Id = Id;
 	}
 	
-	private Invoice previous;
-	public Invoice getPrevious() {
-		return this.previous;
-	}
-	public void setPrevious(Invoice previous) {
-		this.previous = previous;
-	}
-	public boolean hasPrevious() {
-		return this.previous != null;
-	}
-	
 	private Customer customer;
 	public Customer getCustomer() {
 		return this.customer;
@@ -76,9 +65,8 @@ public final class Invoice {
 		this.balance = new Balance(balance);
 	}
 	
-	public Invoice(int Id, Invoice previous, Customer customer, InternetPackage internetPackage, long dueDate, long createdDate, Balance balance) {
+	public Invoice(int Id, Customer customer, InternetPackage internetPackage, long dueDate, long createdDate, Balance balance) {
 		setId(Id);
-		setPrevious(previous);
 		setCustomer(customer);
 		setInternetPackage(internetPackage);
 		setDueDate(dueDate);
