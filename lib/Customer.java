@@ -119,9 +119,15 @@ public final class Customer {
 	public long getCreatedDate() {
 		return this.createdDate;
 	}
-	public Long setCreatedDate(long createdDate) {
-		this.createdDate = createdDate;
+	public long setCreatedDate(long createdDate) {
+		if(DbLib.isValidDate(createdDate)) {
+			this.createdDate = createdDate;
+		}
+		else {
+			throw new IllegalArgumentException("Cannot set createdDate to :\n" + (createdDate == null ? "null" : createdDate) + "\nIs invalid createdDate");
+		}
 	}
+	
 	
 	private boolean active;
 	public boolean isActive() {
