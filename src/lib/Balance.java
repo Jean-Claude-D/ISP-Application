@@ -25,13 +25,39 @@ public final class Balance {
 		this.total = total;
 	}
 	
-	public Balance(int Id, double subTotal, double total) {
+	private List<ExtraFee> extraFees;
+	public void addExtraFee(ExtraFee extraFee) {
+		if(extraFee == null) {
+			throw new IllegalArgumentException("Cannot add extraFee :\nnull\nIs null extraFee");
+		}
+		
+		this.extraFees.add(new ExtraFee(extraFee));
+	}
+	public List<ExtraFee> getExtraFees() {
+		List<ExtraFee> extraFees = new ArrayList<ExtraFee>(this.extraFees);
+		
+		for(ExtraFee extraFee : this.extraFees) {
+			extraFees.add(extraFee);
+		}
+		
+		return extraFees;
+	}
+	private void setExtraFees(List<ExtraFee> extraFees) {
+		this.extraFees = new ArrayList<ExtraFee>(extraFees.size());
+		
+		for(ExtraFee extraFee : extraFees) {
+			this.extraFees.add(extraFee);
+		}
+	}
+	
+	public Balance(int Id, double subTotal, double total, List<ExtraFee> extraFees) {
 		setId(Id);
 		setSubTotal(subTotal);
 		setTotal(total);
+		setExtraFees(extraFees);
 	}
 	
 	public Balance(Balance balance) {
-		this(balance.Id, balance.subTotal, balance.total);
+		this(balance.Id, balance.subTotal, balance.total, balance.extraFees);
 	}
 }
