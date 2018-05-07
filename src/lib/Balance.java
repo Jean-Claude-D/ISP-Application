@@ -1,5 +1,8 @@
 package lib;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public final class Balance {
 	private int Id;
 	public int getId() {
