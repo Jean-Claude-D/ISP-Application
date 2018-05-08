@@ -46,7 +46,7 @@ public final class DbLib {
 
 			SecretKey key = skf.generateSecret(spec);
 			
-	        String hash = Base64.getEncoder().encodeToString(key.getEncoded()).substring(0,length - 1);
+	        String hash = Base64.getEncoder().encodeToString(key.getEncoded()).substring(0,length);
 			
 	        return hash;
 		}
@@ -54,18 +54,4 @@ public final class DbLib {
 			throw new RuntimeException("Could not hash password", exc);
 		}
 	}
-	
-	/*
-	private static String byteArrayToHex(byte[] arr) {
-		if(arr == null) {
-			throw new IllegalArgumentException("Cannot convert arr to Hex : is null");
-		}
-		
-		StringBuilder hex = new StringBuilder();
-		for(byte hexByte : arr) {
-			hex.append((char)(128 + hexByte));
-		}
-		
-		return hex.toString();
-	}*/
 }

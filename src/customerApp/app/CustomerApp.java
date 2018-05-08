@@ -15,7 +15,7 @@ public final class CustomerApp {
 		app.init();
 		
 		
-		String[] passwdList = {"paord", "hellrld", "hiere", "jbobdoe", "suzassword"};
+		String[] passwdList = {"passwd", "password", "hackable", "imjoe", "helloworld"};
 		for(int i = 0; i < passwdList.length; i++) {
 			System.out.println(passwdList[i] + ":");
 			
