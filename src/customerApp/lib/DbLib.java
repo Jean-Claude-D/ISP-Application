@@ -12,6 +12,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import java.util.Base64;
+
 public final class DbLib {
 	private static final SecureRandom RAND = new SecureRandom();
 	
@@ -30,7 +32,7 @@ public final class DbLib {
 	}
 	
 	public static String getSalt(int length) {
-		return new BigInteger(length * 8, RAND).toString(32);
+		return new BigInteger(length * 5, RAND).toString(32);
 	}
 	public static String getSalt() {
 		return getSalt(30);
@@ -40,11 +42,11 @@ public final class DbLib {
 		try {
 			SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
 			
-			PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 1024, length);
+			PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 1024, length * 6);
 
 			SecretKey key = skf.generateSecret(spec);
 			
-	        String hash = byteArrayToHex(key.getEncoded());
+	        String hash = Base64.getEncoder().encodeToString(key.getEncoded()).substring(0,length - 1);
 			
 	        return hash;
 		}
@@ -53,6 +55,7 @@ public final class DbLib {
 		}
 	}
 	
+	/*
 	private static String byteArrayToHex(byte[] arr) {
 		if(arr == null) {
 			throw new IllegalArgumentException("Cannot convert arr to Hex : is null");
@@ -64,5 +67,5 @@ public final class DbLib {
 		}
 		
 		return hex.toString();
-	}
+	}*/
 }
