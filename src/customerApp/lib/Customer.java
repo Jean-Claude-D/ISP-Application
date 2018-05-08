@@ -1,8 +1,5 @@
 package lib;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import java.util.Date;
 import biz.BizUtil;
 
@@ -24,38 +21,38 @@ public final class Customer {
 		return username != null && username.length() <= USERNAME_MAX_LENGTH;
 	}
 	
-	private String password;
-	public static final int PASSWORD_LENGTH = 30;
-	public String getPassword() {
-		return this.password;
+	private String firstname;
+	public static final int FIRSTNAME_MAX_LENGTH = 40;
+	public String getFirstname() {
+		return this.firstname;
 	}
-	public void setPassword(String password) {
-		if(isValidPassword(password)) {
-			this.password = password;
+	public void setFirstname(String firstname) {
+		if(isValidFirstname(firstname)) {
+			this.firstname = firstname;
 		}
 		else {
-			throw new IllegalArgumentException("Cannot set password to :\n" + (password == null ? "null" : password) + "\nIs invalid password");
+			throw new IllegalArgumentException("Cannot set firstname to :\n" + (firstname == null ? "null" : firstname) + "\nIs invalid firstname");
 		}
 	}
-	public static boolean isValidPassword(String password) {
-		return password != null && password.length() == PASSWORD_LENGTH;
+	public static boolean isValidFirstname(String firstname) {
+		return firstname != null && firstname.length() <= FIRSTNAME_MAX_LENGTH;
 	}
 	
-	private String salt;
-	public static final int SALT_LENGTH = 30;
-	public String getSalt() {
-		return this.salt;
+	private String lastname;
+	public static final int LASTNAME_MAX_LENGTH = 40;
+	public String getLastname() {
+		return this.lastname;
 	}
-	public void setSalt(String salt) {
-		if(isValidSalt(salt)) {
-			this.salt = salt;
+	public void setLastname(String lastname) {
+		if(isValidLastname(lastname)) {
+			this.lastname = lastname;
 		}
 		else {
-			throw new IllegalArgumentException("Cannot set salt to :\n" + (salt == null ? "null" : salt) + "\nIs invalid salt");
+			throw new IllegalArgumentException("Cannot set lastname to :\n" + (lastname == null ? "null" : lastname) + "\nIs invalid lastname");
 		}
 	}
-	public static boolean isValidSalt(String salt) {
-		return salt != null && salt.length() == SALT_LENGTH;
+	public static boolean isValidLastname(String lastname) {
+		return lastname != null && lastname.length() <= LASTNAME_MAX_LENGTH;
 	}
 	
 	private String phone;
@@ -125,32 +122,22 @@ public final class Customer {
 		}
 	}
 	
-	private boolean active;
-	public boolean isActive() {
-		return this.active;
-	}
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-	public void setActive(char active) {
-		this.active = active == '1';
-	}
-	
-	public Customer(String username, String password, String salt, String phone, String email, String address, long createdDate, boolean active) {
+	public Customer(String username, String firstname, String lastname, String phone, String email, String address, long createdDate) {
 		setUsername(username);
-		setPassword(password);
-		setSalt(salt);
+		setFirstname(firstname);
+		setLastname(lastname);
 		setPhone(phone);
 		setEmail(email);
 		setAddress(address);
 		setCreatedDate(createdDate);
-		setActive(active);
 	}
 	
 	@Override
 	public String toString() {
 		return "***************\n" +
 		"Username : " + this.getUsername() + '\n' +
+		"Firstname : " + this.getFirstname() + '\n' +
+		"Lastname : " + this.getLastname() + '\n' +
 		"Phone : " + this.getPhone() + '\n' +
 		"Email : " + (this.hasEmail() ? this.getEmail() : "No Email") + '\n' +
 		"Address : " + this.getAddress() + '\n' +

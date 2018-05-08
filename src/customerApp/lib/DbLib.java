@@ -41,4 +41,8 @@ public final class DbLib {
 			throw new RuntimeException("Could not hash password", exc);
 		}
 	}
+	
+	public static String hash(String password, String salt) {
+		return hash(password, salt, 30);
+	}
 }

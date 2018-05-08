@@ -45,29 +45,33 @@ public final class Menu {
 			}
 			
 			for(int i = 0; i < options.size(); i++) {
-				System.out.println((i + 1) + ".\t" + options.get(1).key);
+				System.out.println((i + 1) + ".\t" + options.get(i).key);
 			}
 			System.out.println("0.\tExit " + this.APP_NAME);
 			
-			userChoice = BizUtil.getValidUserInput("Please Enter your Choice", "You must enter a valid integer from 0 to " + this.options.size() + 1,
-			(String input) -> {
-				if(input == null || input.trim().equals("") || !BizUtil.validParse(input)) {
-					return false;
+			userChoice = BizUtil.getValidUserInput(
+				"Please Enter your Choice",
+				"You must enter a valid integer from 0 to " + this.options.size() + 1,
+				(String input) -> {
+					if(input == null || input.trim().equals("") || !BizUtil.validParse(input)) {
+						return false;
+					}
+					
+					int inputNum = Integer.parseInt(input);
+					
+					return inputNum >= 0 && inputNum <= this.options.size() + 1;
+				},
+				(String input) -> {
+					return Integer.parseInt(input);
 				}
-				
-				int inputNum = Integer.parseInt(input);
-				
-				return inputNum >= 0 && inputNum <= this.options.size() + 1;
-			},
-			(String input) -> {
-				return Integer.parseInt(input);
-			});
+			);
 			
-			for(int i = 1; i < this.options.size() + 1; i++) {
+			for(int i = 0; i < this.options.size(); i++) {
 				if(i + 1 == userChoice) {
 					System.out.println(this.options.get(i).value.get());
 				}
 			}
+			
 		} while(userChoice != 0);
 	}
 	
