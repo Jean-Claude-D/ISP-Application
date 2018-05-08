@@ -30,7 +30,7 @@ public final class DbLib {
 	}
 	
 	public static String getSalt(int length) {
-		return new BigInteger(140, RAND).toString(length);
+		return new BigInteger(length * 8, RAND).toString(32);
 	}
 	public static String getSalt() {
 		return getSalt(30);
@@ -44,12 +44,25 @@ public final class DbLib {
 
 			SecretKey key = skf.generateSecret(spec);
 			
-	        String hash = new String(key.getEncoded());
+	        String hash = byteArrayToHex(key.getEncoded());
 			
 	        return hash;
 		}
 		catch(NoSuchAlgorithmException | InvalidKeySpecException exc) {
 			throw new RuntimeException("Could not hash password", exc);
 		}
+	}
+	
+	private static String byteArrayToHex(byte[] arr) {
+		if(arr == null) {
+			throw new IllegalArgumentException("Cannot convert arr to Hex : is null");
+		}
+		
+		StringBuilder hex = new StringBuilder();
+		for(byte hexByte : arr) {
+			hex.append((char)(128 + hexByte));
+		}
+		
+		return hex.toString();
 	}
 }

@@ -3,6 +3,8 @@ package lib;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.util.Date;
+
 public final class Customer {
 	private String username;
 	public static final int USERNAME_MAX_LENGTH = 20;
@@ -109,17 +111,6 @@ public final class Customer {
 		return address != null && address.length() <= ADDRESS_LENGTH;
 	}
 	
-	private InternetPackage internetPackage;
-	public InternetPackage getInternetPackage() {
-		return this.internetPackage;
-	}
-	public void setInternetPackage(InternetPackage internetPackage) {
-		this.internetPackage = internetPackage;
-	}
-	public boolean hasInternetPackage() {
-		return this.internetPackage != null;
-	}
-	
 	private long createdDate;
 	public long getCreatedDate() {
 		return this.createdDate;
@@ -144,53 +135,24 @@ public final class Customer {
 		this.active = active == '1';
 	}
 	
-	private PayingInfo payingInfo;
-	public PayingInfo getPayingInfo() {
-		return (hasPayingInfo() ? new PayingInfo(this.payingInfo) : null);
-	}
-	public void setPayingInfo(PayingInfo payingInfo) {
-		this.payingInfo = (hasPayingInfo() ? new PayingInfo(payingInfo) : null);
-	}
-	public boolean hasPayingInfo() {
-		return this.payingInfo != null;
-	}
-	
-	private List<DailyUsage> dailyUsages;
-	public void addDailyUsage(DailyUsage dailyUsage) {
-		if(dailyUsage == null) {
-			throw new IllegalArgumentException("Cannot add dailyUsage to :\nnull\nIs null dailyUsage");
-		}
-		
-		this.dailyUsages.add(new DailyUsage(dailyUsage));
-	}
-	public List<DailyUsage> getDailyUsages() {
-		List<DailyUsage> dailyUsages = new ArrayList<DailyUsage>(this.dailyUsages);
-		
-		for(DailyUsage dailyUsage : this.dailyUsages) {
-			dailyUsages.add(dailyUsage);
-		}
-		
-		return dailyUsages;
-	}
-	private void setDailyUsages(List<DailyUsage> dailyUsages) {
-		this.dailyUsages = new ArrayList<DailyUsage>(dailyUsages.size());
-		
-		for(DailyUsage dailyUsage : dailyUsages) {
-			this.dailyUsages.add(dailyUsage);
-		}
-	}
-	
-	public Customer(String username, String password, String salt, String phone, String email, String address, InternetPackage internetPackage, long createdDate, boolean active, PayingInfo payingInfo, List<DailyUsage> dailyUsages) {
+	public Customer(String username, String password, String salt, String phone, String email, String address, long createdDate, boolean active) {
 		setUsername(username);
 		setPassword(password);
 		setSalt(salt);
 		setPhone(phone);
 		setEmail(email);
 		setAddress(address);
-		setInternetPackage(internetPackage);
 		setCreatedDate(createdDate);
 		setActive(active);
-		setPayingInfo(payingInfo);
-		setDailyUsages(dailyUsages);
+	}
+	
+	@Override
+	public String toString() {
+		return "***************\n" +
+		"Username : " + this.getUsername() + '\n' +
+		"Phone : " + this.getPhone() + '\n' +
+		"Email : " + (this.hasEmail() ? this.getEmail() : "No Email") + '\n' +
+		"Address : " + this.getAddress() + '\n' +
+		"Since : " + (new Date(this.getCreatedDate())).toString() + "\n***************\n";
 	}
 }
