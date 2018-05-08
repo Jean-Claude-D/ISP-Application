@@ -14,18 +14,6 @@ public final class CustomerApp {
 		CustomerApp app = new CustomerApp();
 		app.init();
 		
-		
-		String[] passwdList = {"passwd", "password", "hackable", "imjoe", "helloworld"};
-		for(int i = 0; i < passwdList.length; i++) {
-			System.out.println(passwdList[i] + ":");
-			
-			String salt = DbLib.getSalt(30);
-			System.out.println(salt);
-			System.out.println(DbLib.hash(passwdList[i], salt, 30));
-			
-			System.out.println();
-		}
-		
 		/*List<Pair<String, Supplier<String>>> optionList = new ArrayList<Pair<String, Supplier<String>>>();
 		
 		optionList.add(new Pair<String, Supplier<String>>("Log In", () -> {

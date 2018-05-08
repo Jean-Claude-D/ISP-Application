@@ -1,8 +1,11 @@
 package biz;
 
 import java.util.Scanner;
+
 import java.util.function.Predicate;
 import java.util.function.Function;
+
+import java.sql.Date;
 
 public final class BizUtil {
 	private static final Scanner READ = new Scanner(System.in);
@@ -41,5 +44,17 @@ public final class BizUtil {
 		}
 		
 		return true;
+	}
+	
+	public static boolean isValidDate(long date) {
+		return date >= 0;
+	}
+	
+	public static Date toDate(long date) {
+		return new Date(date);
+	}
+	
+	public static long toLong(Date date) {
+		return date.getTime();
 	}
 }

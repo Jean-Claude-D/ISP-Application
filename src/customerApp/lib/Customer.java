@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import java.util.Date;
+import biz.BizUtil;
 
 public final class Customer {
 	private String username;
@@ -116,7 +117,7 @@ public final class Customer {
 		return this.createdDate;
 	}
 	public void setCreatedDate(long createdDate) {
-		if(DbLib.isValidDate(createdDate)) {
+		if(BizUtil.isValidDate(createdDate)) {
 			this.createdDate = createdDate;
 		}
 		else {
