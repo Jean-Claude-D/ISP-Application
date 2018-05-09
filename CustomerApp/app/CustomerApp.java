@@ -13,6 +13,7 @@ public final class CustomerApp {
 	
 	private CustomerApp() {
 	}
+	String userLogged = null;
 	
 	public static void main(String[] args) {
 		CustomerApp app = new CustomerApp();
@@ -25,14 +26,28 @@ public final class CustomerApp {
 			throw new RuntimeException("Could not connect to " + LOCATION);
 		}
 		
-		char userInput = 'q';
+		char userInput = (char) 0;
 		
 		do {
-			userInput = UserInputUtil.getCharInput(
-				"Please enter your choice",
-				"Must be a valid character",
-				(c) -> {return true;}
-			);
+			/* As long as the customer is not logged in, the application will keep asking */
+			if(app.userLogged == null) {
+				
+			}
+			else {
+				userInput = UserInputUtil.getCharInput(
+					"Please enter your choice",
+					"Must be a valid character",
+					(c) -> {return true;}
+				);
+				
+				switch(userInput) {
+					case 'q':
+						System.out.println("Goodbye!");
+						break;
+					default:
+						System.err.println("Invalid choice : " + userInput);
+				}
+			}
 		}while(userInput != 'q');
 	}
 	
