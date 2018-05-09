@@ -9,6 +9,8 @@ import biz.Customer;
 import lib.UserInputUtil;
 import lib.ConnectionUtil;
 
+import lib.SecurityUtil;
+
 public final class CustomerApp {
 	public static final String LOCATION = "localhost";
 	public static final String USER = "JC";
@@ -45,8 +47,11 @@ public final class CustomerApp {
 				String salt = null;
 				try {
 					salt = CustomerUtil.getSalt(username);
+					System.out.println(salt);
 				}
 				catch(SQLException exc) {
+					System.out.println("salt error");
+					System.out.println(exc);
 				}
 				
 				if(salt != null) {
@@ -54,14 +59,17 @@ public final class CustomerApp {
 						password, salt, 32
 					);
 					
+					System.out.println("hashed");
 					
 					try {
-						app.userLogged = Customer.login(
+						app.userLogged = CustomerUtil.login(
 							username, hashedPassword
 						);
+						System.out.println("logged");
 					}
 					catch(SQLException exc) {
 						System.err.println(loginError);
+						System.out.println(exc);
 					}
 				}
 				else {

@@ -9,6 +9,9 @@ import java.sql.CallableStatement;
 import java.sql.Types;
 import java.sql.Connection;
 
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public final class CustomerUtil {
 	private CustomerUtil() {
 	}
@@ -16,6 +19,15 @@ public final class CustomerUtil {
 	public static String getSalt(String username) throws SQLException {
 		try(Connection conn = ConnectionUtil.getConnection()) {
 			conn.setAutoCommit(false);
+			
+			ResultSet rs = conn.createStatement().executeQuery("SELECT USERNAME, SALT FROM CUSTOMER");
+			
+			while(rs.next()) {
+				System.out.println(rs.getString("USERNAME"));
+				System.out.println(rs.getString("SALT"));
+				System.out.println();
+			}
+			System.out.println("No salt from inline SQL");
 			
 			CallableStatement getSaltFunc = conn.prepareCall(
 				"{? = call CUSTOMER_PCKG.GET_SALT(?)}"
@@ -29,6 +41,7 @@ public final class CustomerUtil {
 				foundSalt = getSaltFunc.getString(1);
 			}
 			catch(SQLException exc) {
+				System.out.println(exc);
 				/* If execution goes wrong, means could not get the salt */
 			}
 			
@@ -41,7 +54,7 @@ public final class CustomerUtil {
 		}
 	}
 	
-	public static Customer login(String username, byte[] hashedPassword) {
+	public static Customer login(String username, byte[] hashedPassword) throws SQLException{
 		try(Connection conn = ConnectionUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			
