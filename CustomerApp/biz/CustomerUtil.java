@@ -17,9 +17,7 @@ public final class CustomerUtil {
 	}
 	
 	public static String getSalt(String username) throws SQLException {
-		try(Connection conn = ConnectionUtil.getConnection()) {
-			conn.setAutoCommit(false);
-			
+		try(Connection conn = ConnectionUtil.getConnection(false)) {
 			CallableStatement getSaltFunc = conn.prepareCall(
 				"{? = call CUSTOMER_PCKG.GET_SALT(?)}"
 			);
@@ -44,10 +42,8 @@ public final class CustomerUtil {
 		}
 	}
 	
-	public static Customer login(String username, byte[] hashedPassword) throws SQLException{
-		try(Connection conn = ConnectionUtil.getConnection()) {
-			conn.setAutoCommit(false);
-			
+	public static Customer login(String username, byte[] hashedPassword) throws SQLException {
+		try(Connection conn = ConnectionUtil.getConnection(false)) {
 			CallableStatement loginFunc = conn.prepareCall(
 				"{? = call CUSTOMER_PCKG.LOGIN(?,?,?,?,?,?,?,?)}"
 			);
@@ -81,6 +77,42 @@ public final class CustomerUtil {
 			conn.commit();
 			
 			return loggedCust;
+		}
+		catch(SQLException exc) {
+			throw exc;
+		}
+	}
+	
+	public static boolean changePassword(String customer, byte[] hashedPassword, byte[] newPassword, String salt) throws SQLException {
+		try(Connection conn = ConnectionUtil.getConnection(false)) {
+			CallableStatement changeFunc = conn.prepareCall(
+				"{? = call CUSTOMER_PCKG.CHANGE_PASSWORD(?,?,?,?)}"
+			);
+			changeFunc.registerOutParameter(1, Types.INTEGER);
+			changeFunc.setString(2, customer);
+			changeFunc.setBytes(3, newPassword);
+			changeFunc.setString(4, salt);
+			changeFunc.setBytes(5, hashedPassword);
+			
+			boolean success = false;
+			
+			try {
+				changeFunc.execute();
+				
+				success = changeFunc.getInt(1) != 0;
+			}
+			catch(SQLException exc) {
+				System.out.println(exc);
+			}
+			
+			if(success) {
+				conn.commit();
+			}
+			else {
+				ConnectionUtil.rollback(conn, 15);
+			}
+			
+			return success;
 		}
 		catch(SQLException exc) {
 			throw exc;

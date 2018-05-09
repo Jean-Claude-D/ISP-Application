@@ -10,7 +10,7 @@ public final class PasswordHashTable {
 	}
 	
 	public static void main(String[] args) {
-		String[] myPasswds = {"password", "passwd", "mypassword", "helloWorld", "password123", "1234", "IloveSQL"};
+		String[] myPasswds = {"password", "passwd", "mypassword", "helloWorld", "password123", "1234", "IloveSQL", "4321"};
 		generate(myPasswds);
 	}
 	

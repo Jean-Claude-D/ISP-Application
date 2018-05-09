@@ -82,6 +82,9 @@ public final class CustomerApp {
 					case '1':
 						app.userLogged = null;
 						break;
+					case '2':
+						app.changePassword();
+						break;
 					case 'q':
 						System.out.println("Goodbye!");
 						break;
@@ -105,4 +108,69 @@ public final class CustomerApp {
 	private String printMenu() {
 		return "";
 	}
+	
+	private void changePassword() {
+		String salt = null;
+		try {
+			salt = CustomerUtil.getSalt(this.userLogged.username);
+		}
+		catch(SQLException exc) {
+			System.err.println("Could not perform the action");
+		}
+		
+		String password = UserInputUtil.getStringInput(
+			"Please enter your old password"
+		);
+		byte[] hashedPassword = SecurityUtil.hash(password, salt, 32);
+		
+		String newPassword = UserInputUtil.getStringInput(
+			"Please enter your new password"
+		);
+		String confirmPassword = UserInputUtil.getStringInput(
+			"Please confirm your new password"
+		);
+		
+		if(newPassword.equals(confirmPassword)) {
+			String newSalt = SecurityUtil.getSalt(30);
+			byte[] hashedNewPassword = SecurityUtil.hash(newPassword, newSalt, 32);
+			
+			boolean changeSuccess = false;
+			try {
+				changeSuccess = CustomerUtil.changePassword(this.userLogged.username, hashedPassword, hashedNewPassword, newSalt);
+			}
+			catch(SQLException exc) {
+				System.out.println(exc);
+			}
+			
+			if(changeSuccess) {
+				System.out.println("Change succeeded");
+			}
+			else {
+				System.out.println("Change failed");
+			}
+		}
+		else {
+			System.err.println("Passwords do not match");
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
