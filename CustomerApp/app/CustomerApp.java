@@ -41,10 +41,9 @@ public final class CustomerApp {
 				);
 				
 				try {
-					System.out.println(CustomerUtil.getSalt(app, username));
+					System.out.println(CustomerUtil.getSalt(username));
 				}
 				catch(SQLException exc) {
-					System.err.println(exc);
 					System.err.println("Something went wrong when getting the salt");
 				}
 			}

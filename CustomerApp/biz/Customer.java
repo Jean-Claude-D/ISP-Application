@@ -11,6 +11,20 @@ public final class Customer {
 	public String address;
 	public Date created;
 	
+	public Customer(String username, String firstname, String lastname, String phone, String email, String address, Date created) {
+		if(username == null || firstname == null || lastname == null || phone == null || address == null || created == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		this.username = username;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.phone = phone;
+		this.email = email;
+		this.address = address;
+		this.created = created;
+	}
+	
 	@Override
 	public String toString() {
 		return
