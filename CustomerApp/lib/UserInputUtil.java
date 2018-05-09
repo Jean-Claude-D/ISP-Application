@@ -38,6 +38,10 @@ public final class UserInputUtil {
 		return getValidInput(message, expected, p, (input) -> {return input;});
 	}
 	
+	public static String getStringInput(String message) {
+		return getStringInput(message, "", (input) -> {return true;});
+	}
+	
 	public static char getCharInput(String message, String expected, Predicate<Character> p) {
 		boolean firstTimeAsking = true;
 		boolean isValid = false;

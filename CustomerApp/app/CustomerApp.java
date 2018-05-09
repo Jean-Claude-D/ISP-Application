@@ -30,21 +30,42 @@ public final class CustomerApp {
 		}
 		
 		char userInput = (char) 0;
+		String loginError = "Invalid username/password : denied";
 		
 		do {
 			/* As long as the customer is not logged in, the application will keep asking */
 			if(app.userLogged == null) {
 				String username = UserInputUtil.getStringInput(
-					"Please enter your username",
-					"Must be a valid username",
-					(in) -> {return in.length() <= 20;}
+					"Please enter your username"
+				);
+				String password = UserInputUtil.getStringInput(
+					"Please enter your password"
 				);
 				
+				String salt = null;
 				try {
-					System.out.println(CustomerUtil.getSalt(username));
+					salt = CustomerUtil.getSalt(username);
 				}
 				catch(SQLException exc) {
-					System.err.println("Something went wrong when getting the salt");
+				}
+				
+				if(salt != null) {
+					byte[] hashedPassword = SecurityUtil.hash(
+						password, salt, 32
+					);
+					
+					
+					try {
+						app.userLogged = Customer.login(
+							username, hashedPassword
+						);
+					}
+					catch(SQLException exc) {
+						System.err.println(loginError);
+					}
+				}
+				else {
+					System.err.println(loginError);
 				}
 			}
 			else {
