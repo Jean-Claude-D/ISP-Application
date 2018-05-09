@@ -5,6 +5,10 @@ public final class CustomerApp {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("Build works");
+		char userInput = 'q';
+		
+		do {
+			
+		}while(userInput != 'q');
 	}
 }
