@@ -14,7 +14,7 @@ public final class SecurityUtil {
 	/* Cryptographically secure random number generator */
 	private static final SecureRandom RAND = new SecureRandom();
 	
-	private SecurityUtil {
+	private SecurityUtil() {
 	}
 	
 	public static String getSalt(int charLength) {
