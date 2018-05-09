@@ -6,4 +6,6 @@ javac -Xlint:unchecked -Xdiags:verbose -classpath .;.\bin\ojdbc6.jar -d bin @sou
 
 CD bin
 
-java -classpath .;../ojdbc6.jar app.CustomerApp
+java -classpath .;./ojdbc6.jar app.CustomerApp
+
+PAUSE

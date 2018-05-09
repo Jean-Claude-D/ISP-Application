@@ -9,11 +9,11 @@ public final class ConnectionUtil {
 	public ConnectionUtil() {
 	}
 	
-	public Connection getConnection(String location, String user, String password) throws SQLException{
+	public static Connection getConnection(String location, String user, String password) throws SQLException{
 		return DriverManager.getConnection("jdbc:oracle:thin:@" + location + ":1521:xe", user, password);
 	}
 	
-	public boolean testConnection(String location, String user, String password) {
+	public static boolean testConnection(String location, String user, String password) {
 		try(Connection test = getConnection(location, user, password)) {
 			return test != null && test.isValid(0);
 		}
