@@ -22,27 +22,13 @@ public final class CustomerApp {
 		List<Pair<String, Supplier<String>>> optionList = new ArrayList<Pair<String, Supplier<String>>>();
 		
 		optionList.add(new Pair<String, Supplier<String>>("Log In", () -> {
-			String username = BizUtil.getValidUserInput(
-				"Please enter your username",
-				"You must enter a maximum of " + Customer.USERNAME_MAX_LENGTH + " characters",
-				(String input) -> {return Customer.isValidUsername(input);},
-				(String validInput) -> {return validInput;}
-			);
-			
-			String password = BizUtil.getValidUserInput(
-				"Please enter your password",
-				"Invalid password",
-				(String input) -> {return true;},
-				(String validInput) -> {return validInput;}
-			);
-			
-			Customer loggedIn = AppUtil.login(username, password, "login : invalid username/password");
+			Customer loggedIn = AppUtil.login();
 			
 			if(loggedIn == null) {
-				return "login : invalid username/password";
+				return "\nlogin : invalid username/password";
 			}
 			else {
-				return "login : \n" + loggedIn.toString();
+				return "\nlogin : \n" + loggedIn.toString();
 			}
 		}));
 		
@@ -50,6 +36,27 @@ public final class CustomerApp {
 		() -> {return app.state();}, optionList);
 		
 		appMenu.run();
+		
+		/*String[] passwds = {"password", "passwd", "myPassw"};
+		for(String passwd : passwds) {
+			String salt = DbLib.getSalt();
+			byte[] hashed = DbLib.hash(passwd, salt);
+			
+			System.out.println(passwd);
+			System.out.println(salt);
+			System.out.println(bytesToHex(hashed));
+		}*/
+	}
+	
+	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	public static String bytesToHex(byte[] bytes) {
+		char[] hexChars = new char[bytes.length * 2];
+		for ( int j = 0; j < bytes.length; j++ ) {
+			int v = bytes[j] & 0xFF;
+			hexChars[j * 2] = hexArray[v >>> 4];
+			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+		}
+		return new String(hexChars);
 	}
 	
 	private void init() {

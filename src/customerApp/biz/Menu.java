@@ -69,6 +69,7 @@ public final class Menu {
 			for(int i = 0; i < this.options.size(); i++) {
 				if(i + 1 == userChoice) {
 					System.out.println(this.options.get(i).value.get());
+					System.out.println('\n');
 				}
 			}
 			

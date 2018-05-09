@@ -7,6 +7,7 @@ import biz.BizUtil;
 
 import lib.Customer;
 import lib.DbLib;
+import lib.CustomerPack;
 
 public final class AppUtil {
 	private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
@@ -39,86 +40,38 @@ public final class AppUtil {
 		return DriverManager.getConnection(URL, UNAME, PASSWD);
 	}
 	
-	public static Customer login(String Username, String Password, String invalidLoginMessage) {
-		RuntimeException wrongLogin = new RuntimeException(invalidLoginMessage);
+	public static Customer login() {
+		String Username = BizUtil.getValidUserInput(
+			"Please enter your username",
+			"You must enter a maximum of " + Customer.USERNAME_MAX_LENGTH + " characters",
+			(String input) -> {return Customer.isValidUsername(input);},
+			(String validInput) -> {return validInput;}
+		);
+		
+		String Password = BizUtil.getValidUserInput(
+			"Please enter your password",
+			"Invalid password",
+			(String input) -> {return true;},
+			(String validInput) -> {return validInput;}
+		);
 		
 		Connection conn = null;
 		try {
 			conn = getISPConnection();
-			conn.setAutoCommit(false);
 		}
 		catch(SQLException exc) {
-			throw new RuntimeException("login : Error while getting Connection");
+			System.err.println("login : Error while getting Connection");
+			return null;
 		}
 		
-		CallableStatement saltQuery = null;
-		try {
-			String saltQueryStr = "{? = call CUSTOMER_PCKG.GET_SALT(?)}";
-			saltQuery = conn.prepareCall(saltQueryStr);
-			
-			saltQuery.registerOutParameter(1, Types.VARCHAR);
-			saltQuery.setString(2, Username);
-		}
-		catch(SQLException exc) {
-			throw wrongLogin;
-		}
+		String userSalt = CustomerPack.getSalt(conn, Username);
 		
-		String userSalt = null;
-		try {
-			saltQuery.execute();
-			
-			userSalt = saltQuery.getString(1);
-			
-			conn.commit();
-		}
-		catch(SQLException exc) {
-			throw wrongLogin;
-		}
+		Customer loggedCustomer = CustomerPack.login(
+			conn,
+			Username,
+			DbLib.hash(Password, userSalt)
+		);
 		
-		String hashedPassword = DbLib.hash(Password, userSalt);
-		
-		CallableStatement loginCursor = null;
-		try {
-			loginCursor = conn.prepareCall("{? = call CUSTOMER_PCKG.LOGIN(?, ?)}");
-			
-			loginCursor.registerOutParameter(1, Types.OTHER);
-			loginCursor.setString(2, Username);
-			loginCursor.setString(3, hashedPassword);
-		}
-		catch(SQLException exc) {
-			System.out.println("a");
-			System.out.println(exc);
-			/* here */
-			throw wrongLogin;
-		}
-		
-		Customer loggedCustomer = null;
-		try {
-			loginCursor.execute();
-			ResultSet customerRS = (ResultSet) loginCursor.getObject(1);
-			
-			if(customerRS.next()) {
-				loggedCustomer = new Customer(
-					customerRS.getString("USERNAME"),
-					customerRS.getString("PHONE"),
-					customerRS.getString("EMAIL"),
-					customerRS.getString("ADDRESS"),
-					BizUtil.toLong(customerRS.getDate("CREATED_DATE"))
-				);
-			}
-			
-			if(customerRS.next()) {
-				loggedCustomer = null;
-			}
-			
-			conn.commit();
-			return loggedCustomer;
-		}
-		catch(SQLException exc) {
-			System.out.println("b");
-			System.out.println(exc);
-			/* here */
-			throw wrongLogin;
-		}
+		return loggedCustomer;
 	}
 }

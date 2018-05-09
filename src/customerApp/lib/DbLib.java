@@ -25,24 +25,22 @@ public final class DbLib {
 		return getSalt(30);
 	}
 	
-	public static String hash(String password, String salt, int length) {
+	public static byte[] hash(String password, String salt, int length) {
 		try {
 			SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
 			
-			PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 1024, length * 6);
+			PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 1024, length * 4);
 
 			SecretKey key = skf.generateSecret(spec);
 			
-	        String hash = Base64.getEncoder().encodeToString(key.getEncoded()).substring(0,length);
-			
-	        return hash;
+	        return key.getEncoded();
 		}
 		catch(NoSuchAlgorithmException | InvalidKeySpecException exc) {
 			throw new RuntimeException("Could not hash password", exc);
 		}
 	}
 	
-	public static String hash(String password, String salt) {
-		return hash(password, salt, 30);
+	public static byte[] hash(String password, String salt) {
+		return hash(password, salt, 32);
 	}
 }
