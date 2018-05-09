@@ -25,6 +25,7 @@ public class MainSalesApp {
 	public static void main(String[] args) throws SQLException {
 		ConnectionToDatabse x = new ConnectionToDatabse();
 		Connection c = x.getCon();
+		generateRepresentatives(c);
 		Scanner reader = new Scanner(System.in); 
 		System.out.println("Enter your sales username ");
 		String uname = reader.nextLine();
@@ -215,6 +216,9 @@ public class MainSalesApp {
 			callableStatement.setString(8, address);
 			callableStatement.setString(9, packageName);
 			callableStatement.execute();
+			/*
+			 * Need to add the registration of valid date to set up 
+			 */
 	}
 	
 	public static void changeUserPackage(Scanner reader) throws SQLException {
@@ -343,7 +347,7 @@ public class MainSalesApp {
 		String [] passwords = { "yankolo", "momo", "niska", "world"};
 		String [] email = { "yanik@sql.com", "mohammed@sql.com","alpha@sql.com", "hello@sql.com"};
 		String [] phone = {"450-445-9898","450-445-9898","450-445-9898","450-445-9898"};
-		String [] department = {"SALE", "SALE","SALE","SALE"};
+		String [] department = {"TECHNICAL", "SALE","BILLING","TECH SUPPORT"};
 		for(int i = 0 ; i < users.length; i++) {
 			String salt = getSalt();
 			byte [] hashCode = hash(passwords[i], salt);
@@ -357,7 +361,6 @@ public class MainSalesApp {
 			ps.setString(6, "1191 Street HelloWorld");
 			ps.setString(7, department[i]);
 			ps.executeUpdate();
-			c.commit();
 			
 			
 			}
