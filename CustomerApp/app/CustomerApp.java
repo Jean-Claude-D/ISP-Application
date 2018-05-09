@@ -3,17 +3,20 @@ package app;
 import java.sql.*;
 import oracle.jdbc.driver.OracleDriver;
 
+import biz.CustomerUtil;
+import biz.Customer;
+
 import lib.UserInputUtil;
-import biz.ConnectionUtil;
+import lib.ConnectionUtil;
 
 public final class CustomerApp {
-	private static String LOCATION = "localhost";
-	private static String USER = "JC";
-	private static String PASSWORD = "Hydral1sk";
+	public static final String LOCATION = "localhost";
+	public static final String USER = "JC";
+	public static final String PASSWORD = "Hydral1sk";
 	
 	private CustomerApp() {
 	}
-	String userLogged = null;
+	public Customer userLogged = null;
 	
 	public static void main(String[] args) {
 		CustomerApp app = new CustomerApp();
@@ -22,7 +25,7 @@ public final class CustomerApp {
 			throw new RuntimeException("Could not load JDBC driver");
 		}
 		
-		if(!ConnectionUtil.testConnection(LOCATION, USER, PASSWORD)) {
+		if(!ConnectionUtil.testConnection()) {
 			throw new RuntimeException("Could not connect to " + LOCATION);
 		}
 		
@@ -31,7 +34,19 @@ public final class CustomerApp {
 		do {
 			/* As long as the customer is not logged in, the application will keep asking */
 			if(app.userLogged == null) {
+				String username = UserInputUtil.getStringInput(
+					"Please enter your username",
+					"Must be a valid username",
+					(in) -> {return in.length() <= 20;}
+				);
 				
+				try {
+					System.out.println(CustomerUtil.getSalt(app, username));
+				}
+				catch(SQLException exc) {
+					System.err.println(exc);
+					System.err.println("Something went wrong when getting the salt");
+				}
 			}
 			else {
 				userInput = UserInputUtil.getCharInput(
