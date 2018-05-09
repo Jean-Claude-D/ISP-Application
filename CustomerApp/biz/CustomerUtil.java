@@ -20,15 +20,6 @@ public final class CustomerUtil {
 		try(Connection conn = ConnectionUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			
-			ResultSet rs = conn.createStatement().executeQuery("SELECT USERNAME, SALT FROM CUSTOMER");
-			
-			while(rs.next()) {
-				System.out.println(rs.getString("USERNAME"));
-				System.out.println(rs.getString("SALT"));
-				System.out.println();
-			}
-			System.out.println("No salt from inline SQL");
-			
 			CallableStatement getSaltFunc = conn.prepareCall(
 				"{? = call CUSTOMER_PCKG.GET_SALT(?)}"
 			);
@@ -41,7 +32,6 @@ public final class CustomerUtil {
 				foundSalt = getSaltFunc.getString(1);
 			}
 			catch(SQLException exc) {
-				System.out.println(exc);
 				/* If execution goes wrong, means could not get the salt */
 			}
 			

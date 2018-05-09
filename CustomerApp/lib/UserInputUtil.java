@@ -41,26 +41,4 @@ public final class UserInputUtil {
 	public static String getStringInput(String message) {
 		return getStringInput(message, "", (input) -> {return true;});
 	}
-	
-	public static char getCharInput(String message, String expected, Predicate<Character> p) {
-		boolean firstTimeAsking = true;
-		boolean isValid = false;
-		char userInput;
-		
-		do {
-			if(!firstTimeAsking) {
-				System.err.println("\n" + expected + "\n");
-			}
-			
-			System.out.println("\n" + message + "\n");
-			System.out.print(": ");
-			
-			userInput = READ.next(".").charAt(0);
-			
-			firstTimeAsking = false;
-			isValid = p.test(userInput);
-		}while(!isValid);
-		
-		return userInput;
-	}
 }

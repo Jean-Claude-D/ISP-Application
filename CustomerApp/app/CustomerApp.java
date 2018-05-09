@@ -47,19 +47,14 @@ public final class CustomerApp {
 				String salt = null;
 				try {
 					salt = CustomerUtil.getSalt(username);
-					System.out.println(salt);
 				}
 				catch(SQLException exc) {
-					System.out.println("salt error");
-					System.out.println(exc);
 				}
 				
 				if(salt != null) {
 					byte[] hashedPassword = SecurityUtil.hash(
 						password, salt, 32
 					);
-					
-					System.out.println("hashed");
 					
 					try {
 						app.userLogged = CustomerUtil.login(
@@ -69,7 +64,6 @@ public final class CustomerApp {
 					}
 					catch(SQLException exc) {
 						System.err.println(loginError);
-						System.out.println(exc);
 					}
 				}
 				else {
@@ -77,13 +71,17 @@ public final class CustomerApp {
 				}
 			}
 			else {
-				userInput = UserInputUtil.getCharInput(
-					"Please enter your choice",
-					"Must be a valid character",
-					(c) -> {return true;}
+				userInput = UserInputUtil.getValidInput(
+					app.printMenu() + "Please enter your choice",
+					"Must be a single character",
+					(input) -> {return input.length() == 1;},
+					(str) -> {return str.charAt(0);}
 				);
 				
 				switch(userInput) {
+					case '1':
+						app.userLogged = null;
+						break;
 					case 'q':
 						System.out.println("Goodbye!");
 						break;
@@ -102,5 +100,9 @@ public final class CustomerApp {
 		catch(ClassNotFoundException exc) {
 			return false;
 		}
+	}
+	
+	private String printMenu() {
+		return "";
 	}
 }
