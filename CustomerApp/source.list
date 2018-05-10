@@ -1,5 +1,6 @@
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\app\CustomerApp.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\app\PasswordHashTable.java
+C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\Appointment.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\Balance.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\Customer.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\CustomerUtil.java
@@ -12,6 +13,7 @@ C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\Invoice.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\InvoiceUtil.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\Payment.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\Reminder.java
+C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\ServiceType.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\biz\ServiceUtil.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\lib\ConnectionUtil.java
 C:\Users\1633477\School\Oracle\ISP-APP\CustomerApp\lib\SecurityUtil.java

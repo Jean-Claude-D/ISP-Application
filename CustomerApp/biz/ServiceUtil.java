@@ -10,6 +10,7 @@ import java.sql.CallableStatement;
 import java.sql.Types;
 import oracle.jdbc.OracleTypes;
 import java.sql.ResultSet;
+import java.sql.Date;
 
 public final class ServiceUtil {
 	private ServiceUtil() {
@@ -63,7 +64,7 @@ public final class ServiceUtil {
 		return seeProc.getInt(1) != 0;
 	}
 	
-	public boolean requestService(String username, Date requestedDate, ServiceType service, String details) {
+	public boolean requestService(String username, Date requestedDate, ServiceType service, String details) throws SQLException {
 		try(Connection conn = ConnectionUtil.getConnection(false)) {
 			CallableStatement serviceProc = conn.prepareCall(
 			"{call CUSTOMER_PCKG.REQUEST_SERVICE(?,?,?,?)}"
@@ -76,7 +77,7 @@ public final class ServiceUtil {
 			try {
 				serviceProc.execute();
 			}
-			catch(SQLException) {
+			catch(SQLException exc) {
 				ConnectionUtil.rollback(conn, 15);
 				return false;
 			}
@@ -89,5 +90,44 @@ public final class ServiceUtil {
 		}
 	}
 	
-	public 
+	public Appointment[] getAppointmentsFor(String username, boolean accepted) throws SQLException {
+		try(Connection conn = ConnectionUtil.getConnection(false)) {
+			CallableStatement getAppointFunc = conn.prepareCall(
+				"{? = call CUSTOMER_PCKG.CHECK_APPOINTMENTS(?,?,?)}"
+			);
+			getAppointFunc.registerOutParameter(1, Types.ARRAY);
+			getAppointFunc.setString(2, username);
+			getAppointFunc.setBoolean(3, accepted);
+			getAppointFunc.registerOutParameter(4, Types.ARRAY);
+			
+			Appointment[] appointArr = new Appointment[0];
+			
+			try {
+				getAppointFunc.execute();
+			}
+			catch(SQLException exc) {
+				ConnectionUtil.rollback(conn, 15);
+				return appointArr;
+			}
+			
+			conn.commit();
+			
+			Date[] scheduledDates = (Date[]) getAppointFunc.getArray(1).getArray();
+			String[] detailsArr = (String[]) getAppointFunc.getArray(4).getArray();
+			appointArr = new Appointment[detailsArr.length];
+			
+			for(int i = 0; i < appointArr.length; i++) {
+				appointArr[i] = new Appointment(
+					accepted,
+					scheduledDates[i],
+					detailsArr[i]
+				);
+			}
+			
+			return appointArr;
+		}
+		catch(SQLException exc) {
+			throw exc;
+		}
+	}
 }
