@@ -1,4 +1,4 @@
-package lib;
+package biz;
 
 public final class ExtraFeature {
 	public String name;
@@ -25,7 +25,7 @@ public final class ExtraFeature {
 	public String toString() {
 		return
 		"Name : " + name + '\n' +
-		"Description : " (description == null ? "No description" : description) + '\n' +
+		"Description : " + (description == null ? "No description" : description) + '\n' +
 		"Price : " + monthlyPrice + '$' + (perGb ? "/GB" : "/month") + '\n';
 	}
 }

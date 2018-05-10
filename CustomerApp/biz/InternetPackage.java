@@ -1,7 +1,7 @@
-package lib;
+package biz;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public final class InternetPackage {
 	public String name;
@@ -21,7 +21,7 @@ public final class InternetPackage {
 		this.extraFeatures.add(new ExtraFeature(extraFeature));
 	}
 	public List<ExtraFeature> getExtraFeatures() {
-		List<ExtraFeature> extraFeatures = new ArrayList<ExtraFeature>(this.extraFeatures.size());
+		List<ExtraFeature> extraFeatures = new LinkedList<ExtraFeature>();
 		
 		for(ExtraFeature extraFeature : this.extraFeatures) {
 			extraFeatures.add(new ExtraFeature(extraFeature));
@@ -31,10 +31,10 @@ public final class InternetPackage {
 	}
 	private void setExtraFeatures(List<ExtraFeature> extraFeatures) {
 		if(extraFeatures == null) {
-			extraFeatures = new ArrayList<ExtraFeature>();
+			extraFeatures = new LinkedList<ExtraFeature>();
 		}
 		
-		this.extraFeatures = new ArrayList<ExtraFeature>(extraFeatures.size());
+		this.extraFeatures = new LinkedList<ExtraFeature>();
 		
 		for(ExtraFeature extraFeature : extraFeatures) {
 			this.extraFeatures.add(new ExtraFeature(extraFeature));
@@ -80,7 +80,7 @@ public final class InternetPackage {
 		StringBuilder featureList = new StringBuilder();
 		
 		for(ExtraFeature feat : extraFeatures) {
-			featureList.append(extraFeature.toString());
+			featureList.append(feat.toString());
 		}
 		
 		return featureList.toString();

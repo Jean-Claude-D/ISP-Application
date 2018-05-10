@@ -3,8 +3,10 @@ package app;
 import java.sql.*;
 import oracle.jdbc.driver.OracleDriver;
 
-import biz.CustomerUtil;
 import biz.Customer;
+import biz.CustomerUtil;
+import biz.InternetPackage;
+import biz.InternetPackageUtil;
 
 import lib.UserInputUtil;
 import lib.ConnectionUtil;
@@ -85,6 +87,9 @@ public final class CustomerApp {
 					case '2':
 						app.changePassword();
 						break;
+					case '3':
+						app.printPackages();
+						break;
 					case 'q':
 						System.out.println("Goodbye!");
 						break;
@@ -153,4 +158,31 @@ public final class CustomerApp {
 			System.err.println("Passwords do not match");
 		}
 	}
+	
+	private void printPackages() {
+		try {
+			InternetPackage[] packs = InternetPackageUtil.getPackagesFor(userLogged.username);
+			
+			if(packs.length == 0) {
+				System.out.println("No internet package available");
+			}
+			else {
+				for(InternetPackage pack : packs) {
+					System.out.println(pack);
+				}
+			}
+		}
+		catch(SQLException exc) {
+			System.out.println("Could not retrieve internet packages");
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
