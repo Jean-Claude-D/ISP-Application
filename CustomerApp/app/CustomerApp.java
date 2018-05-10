@@ -90,6 +90,9 @@ public final class CustomerApp {
 					case '3':
 						app.printPackages();
 						break;
+					case '4':
+						app.upgradePackage();
+						break;
 					case 'q':
 						System.out.println("Goodbye!");
 						break;
@@ -174,6 +177,25 @@ public final class CustomerApp {
 		}
 		catch(SQLException exc) {
 			System.out.println("Could not retrieve internet packages");
+		}
+	}
+	
+	private void upgradePackage() {
+		String packageName = UserInputUtil.getStringInput(
+			"Please enter the package you want to get"
+		);
+		
+		try {
+			boolean upgraded = InternetPackageUtil.upgradePackage(userLogged.username, packageName);
+			if(upgraded) {
+				System.out.println("Upgrade successful");
+			}
+			else {
+				System.out.println("Upgrade unsuccessful");
+			}
+		}
+		catch(SQLException exc) {
+			System.out.println("Could not perform the upgrade");
 		}
 	}
 }

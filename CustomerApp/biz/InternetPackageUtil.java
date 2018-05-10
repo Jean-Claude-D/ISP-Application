@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.CallableStatement;
+import java.sql.Types;
 import oracle.jdbc.OracleTypes;
 import java.sql.ResultSet;
 
@@ -70,7 +71,23 @@ public final class InternetPackageUtil {
 			return internetPackageArr;
 		}
 		catch(SQLException exc) {
-			System.out.println(exc);
+			throw exc;
+		}
+	}
+	
+	public static boolean upgradePackage(String username, String packageName) throws SQLException {
+		try(Connection conn = ConnectionUtil.getConnection(false)) {
+			CallableStatement upgradeProc = conn.prepareCall(
+				"{? = call CUSTOMER_PCKG.UPGRADE_PACKAGE(?,?)}"
+			);
+			upgradeProc.registerOutParameter(1, Types.INTEGER);
+			upgradeProc.setString(2, username);
+			upgradeProc.setString(2, packageName);
+			
+			upgradeProc.execute();
+			return upgradeProc.getInt(1) != 0;
+		}
+		catch(SQLException exc) {
 			throw exc;
 		}
 	}
