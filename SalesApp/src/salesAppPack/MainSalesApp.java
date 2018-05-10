@@ -20,12 +20,15 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class MainSalesApp {
-
 	private static SecureRandom rand = new SecureRandom();
+	/*
+	 * Main console where the sales rep will pass his login credentials
+	 */
+	
 	public static void main(String[] args) throws SQLException {
 		ConnectionToDatabse x = new ConnectionToDatabse();
 		Connection c = x.getCon();
-		generateRepresentatives(c);
+		//generateRepresentatives(c);
 		Scanner reader = new Scanner(System.in); 
 		System.out.println("Enter your sales username ");
 		String uname = reader.nextLine();
@@ -40,9 +43,16 @@ public class MainSalesApp {
 			valid = validSalesRep(uname,pass,c);
 		}
 		menu(reader,uname);
+		reader.close();
 				
 	}
-	
+	/*
+	 * THis is the menu that the sales rep will be prompted after entering valid input
+	 * He will be able to add new customer
+	 * Change user Internet Package
+	 * Do cold calls for sales
+	 * And modify their own passwords
+	 */
 	public static void menu(Scanner reader,String username) throws SQLException {
 		boolean validChoiceRange = true;
 		ConnectionToDatabse x = new ConnectionToDatabse();
@@ -57,7 +67,7 @@ public class MainSalesApp {
 			String userChoice = reader.nextLine();
 			switch(userChoice) {
 				case "1":
-					addNewCustomer(reader);
+					addNewCustomer(reader,username);
 					validChoiceRange = true;
 					break;
 				case "2":
@@ -82,7 +92,9 @@ public class MainSalesApp {
 			
 		}
 	}
-	
+	/*
+	 * This method is just used to change the users password
+	 */
 	public static void changeUserPassword(Scanner reader, String username) throws SQLException {
 		ConnectionToDatabse x = new ConnectionToDatabse();
 		Connection c = x.getCon();
@@ -98,7 +110,9 @@ public class MainSalesApp {
 	}
 	
 	
-	
+	/*
+	 * This method will generate a random number that the sales will be able to call and tell if it was a successful call or not
+	 */
 	public static void generateColdCall(Scanner reader,String repName) throws SQLException {
 		ConnectionToDatabse x = new ConnectionToDatabse();
 		Connection c = x.getCon();
@@ -137,163 +151,225 @@ public class MainSalesApp {
 		callableStatement.execute();
 		
 	}
-	
-	public static void addNewCustomer(Scanner reader) throws SQLException {
-		ConnectionToDatabse x = new ConnectionToDatabse();
-		Connection c = x.getCon();
-			System.out.println("-------- Enter the customer username ");
-			String userName = reader.nextLine();
-			System.out.println("-------- Enter the customer password ");
-			String userPassword = reader.nextLine();
-			System.out.println("-------- Enter the customer firstname");
-			String fName = reader.nextLine();
-			System.out.println("-------- Enter the customer lastname");
-			String lName = reader.nextLine();
-			System.out.println("-------- Enter the customer phone");
-			String phoneNumber = reader.nextLine();
-			boolean correctPhoneNumber = phoneNumber.matches("^(\\d){3}[-](\\d){3}[-](\\d){4}$");
-			while(!correctPhoneNumber) {
-				System.out.println("-------- Enter the customer phone(Must use the following Format(XXX-XXX-XXXX)");
-			    phoneNumber = reader.nextLine();
-				correctPhoneNumber = phoneNumber.matches("^(\\d){3}[-](\\d){3}[-](\\d){4}$");
-			}
-			System.out.println("-------- Enter customer email");
-			String email = reader.nextLine();
-			boolean correctEmail = email.matches("^.*@[A-Z a-z]{1,}[.][a-z A-Z]{2,3}");
-			while(!correctEmail) {
-				System.out.println("-------- Enter customer email (Must use the following format(XXXX@XXXXX.XXX))");
-				email = reader.nextLine();
-				correctEmail = email.matches("^.*@[A-Z a-z]{1,}[.][a-z A-Z]{2,3}");
-			}
-			System.out.println("-------- Enter customer address ( Must use the following format - (Add.Num-StreetName-StreetType(Boul, Street,etc.)");
-			String address = reader.nextLine();
-			boolean correctAddress = address.matches("^[0-9]{1,4}[-][a-z A-z]{1,}[-][a-z A-Z]{1,}");
-			while(!correctAddress) {
-				System.out.println("Enter customer address -- (Must use the following format - (Add.Num-StreetName-StreetType(Boul, Street,etc.)");
-				 address = reader.nextLine();
-				 correctAddress = address.matches("^[0-9]{1,4}[-][a-z A-z]{1,}[-][a-z A-Z]{1,}");
-			}
-			boolean invalidPackage= true;
-			String packageName = null ;
-			while(invalidPackage) {
-				List<String> intPackages = allPackages(c);
-				System.out.println("-------- Chose one of the Following Packages");
-				for(int i = 0; i < intPackages.size();i+=2) {
-					System.out.println((i+1) +" -- "+intPackages.get(i)+" " + intPackages.get(i+1));
+	/*
+	 * Method that will add a new customer to the database
+	 */
+	public static void addNewCustomer(Scanner reader,String repName) throws SQLException {
+			ConnectionToDatabse x = null;
+			Connection c = null;
+			CallableStatement callableStatement= null;
+			CallableStatement callableStatement2 = null;
+			try {
+				x = new ConnectionToDatabse();
+			    c = x.getCon();
+				System.out.println("-------- Enter the customer username ");
+				String userName = reader.nextLine();
+				System.out.println("-------- Enter the customer password ");
+				String userPassword = reader.nextLine();
+				System.out.println("-------- Enter the customer firstname");
+				String fName = reader.nextLine();
+				System.out.println("-------- Enter the customer lastname");
+				String lName = reader.nextLine();
+				System.out.println("-------- Enter the customer phone");
+				String phoneNumber = reader.nextLine();
+				boolean correctPhoneNumber = phoneNumber.matches("^(\\d){3}[-](\\d){3}[-](\\d){4}$");
+				while(!correctPhoneNumber) {
+					System.out.println("-------- Enter the customer phone(Must use the following Format(XXX-XXX-XXXX)");
+				    phoneNumber = reader.nextLine();
+					correctPhoneNumber = phoneNumber.matches("^(\\d){3}[-](\\d){3}[-](\\d){4}$");
 				}
-				String choice = reader.nextLine();
-				switch(choice) {
-					case "1":
-						packageName = intPackages.get(0);
-						invalidPackage= false;
-						break;
-					case "2":
-						packageName = intPackages.get(0);
-						invalidPackage= false;
-						break;
-					case "3":
-						packageName = intPackages.get(0);
-						invalidPackage= false;
-						break;
-					case "4":
-						packageName = intPackages.get(0);
-						invalidPackage= false;
-						break;
-					default:
-						System.out.println("-------- Chose one of the Following Packages(Choose a valid choice)");
+				System.out.println("-------- Enter customer email");
+				String email = reader.nextLine();
+				boolean correctEmail = email.matches("^.*@[A-Z a-z]{1,}[.][a-z A-Z]{2,3}");
+				while(!correctEmail) {
+					System.out.println("-------- Enter customer email (Must use the following format(XXXX@XXXXX.XXX))");
+					email = reader.nextLine();
+					correctEmail = email.matches("^.*@[A-Z a-z]{1,}[.][a-z A-Z]{2,3}");
+				}
+				System.out.println("-------- Enter customer address ( Must use the following format - (Add.Num-StreetName-StreetType(Boul, Street,etc.)");
+				String address = reader.nextLine();
+				boolean correctAddress = address.matches("^[0-9]{1,4}[-][a-z A-z]{1,}[-][a-z A-Z]{1,}");
+				while(!correctAddress) {
+					System.out.println("Enter customer address -- (Must use the following format - (Add.Num-StreetName-StreetType(Boul, Street,etc.)");
+					 address = reader.nextLine();
+					 correctAddress = address.matches("^[0-9]{1,4}[-][a-z A-z]{1,}[-][a-z A-Z]{1,}");
+				}
+				boolean invalidPackage= true;
+				String packageName = null ;
+				while(invalidPackage) {
+					List<String> intPackages = allPackages(c);
+					System.out.println("-------- Chose one of the Following Packages");
+					for(int i = 0, j = 1; i < intPackages.size();i+=2, j++) {
+						System.out.println((j) +" -- "+intPackages.get(i)+" " + intPackages.get(i+1));
+					}
+					String choice = reader.nextLine();
+					switch(choice) {
+						case "1":
+							packageName = intPackages.get(0);
+							invalidPackage= false;
+							break;
+						case "2":
+							packageName = intPackages.get(1);
+							invalidPackage= false;
+							break;
+						case "3":
+							packageName = intPackages.get(2);
+							invalidPackage= false;
+							break;
+						case "4":
+							packageName = intPackages.get(3);
+							invalidPackage= false;
+							break;
+						default:
+							System.out.println("-------- Chose one of the Following Packages(Choose a valid choice)");
+					}
+				}
+				String salt = getSalt();
+				byte [] hashCode = hash(userPassword, salt);
+				callableStatement = c.prepareCall("{call salesAppPack.registerNewCustomerPlusSetUp(?,?,?,?,?,?,?,?,?)}");
+				callableStatement.setString(1, userName);
+				callableStatement.setBytes(2, hashCode);
+				callableStatement.setString(3, salt);
+				callableStatement.setString(4, fName);
+				callableStatement.setString(5, lName);
+				callableStatement.setString(6, phoneNumber);
+				callableStatement.setString(7, email);
+				callableStatement.setString(8, address);
+				callableStatement.setString(9, packageName);
+				callableStatement.execute();
+				/*
+				 * Need to add the registration of valid date to set up 
+				 */
+				callableStatement2 = c.prepareCall("{ call salesAppPack.assignAppointment(?,?)}");
+				callableStatement2.setString(1, repName);
+				callableStatement2.setString(2, userName);
+				callableStatement2.execute();
+				
+				String s = "SELECT scheduled FROM request WHERE customer = ? ";
+				 
+				PreparedStatement ps = c.prepareStatement(s);
+				ps.setString(1, userName);
+				ResultSet rs = ps.executeQuery();
+				if(rs.next()) {
+					Date d = rs.getDate(1);
+					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+
+				    String strDate = sdf.format(d);
+					System.out.println("Your appointment will be scheduled for the following date : " + strDate);
 				}
 			}
-			String salt = getSalt();
-			byte [] hashCode = hash(userPassword, salt);
-			CallableStatement callableStatement = c.prepareCall("{call salesAppPack.registerNewCustomerPlusSetUp(?,?,?,?,?,?,?,?,?)}");
-			callableStatement.setString(1, userName);
-			callableStatement.setBytes(2, hashCode);
-			callableStatement.setString(3, salt);
-			callableStatement.setString(4, fName);
-			callableStatement.setString(5, lName);
-			callableStatement.setString(6, phoneNumber);
-			callableStatement.setString(7, email);
-			callableStatement.setString(8, address);
-			callableStatement.setString(9, packageName);
-			callableStatement.execute();
-			/*
-			 * Need to add the registration of valid date to set up 
-			 */
+			catch(SQLException e) {
+				
+				System.out.println("Something Bad Happened!!!");
+				System.exit(0);
+			}
+			finally {
+				c.close();
+				callableStatement.close();
+				callableStatement2.close();
+			}
+			
+			
+			
 	}
 	
+	/*
+	 * THis method will allow a sales rep to change a customers package
+	 */
 	public static void changeUserPackage(Scanner reader) throws SQLException {
 		boolean invalidUser = true;
-		ConnectionToDatabse x = new ConnectionToDatabse();
-		Connection c = x.getCon();
-		while(invalidUser) {
-			 System.out.println("-------- Enter the name of customer to change their package"); 
-			 String username= reader.nextLine();
-			
-			 String s = "SELECT username , INTERNET_PACKAGE FROM customer WHERE username = ? ";
-			 
-			 PreparedStatement ps = c.prepareStatement(s);
-			 ps.setString(1, username);
-			 ResultSet rs = ps.executeQuery();
-			 if(rs.next()) {
-				 swapInternetPackages(rs.getString(2),reader, rs.getString(1));
-				invalidUser= false;
-			 }
-			 else {
-				 System.out.println("Username or password is wrong try again");
-				 invalidUser =  true;
-			}
+		ConnectionToDatabse x = null;
+		Connection c = null;
+		try {
+			 x = new ConnectionToDatabse();
+				c = x.getCon();
+				while(invalidUser) {
+					 System.out.println("-------- Enter the name of customer to change their package"); 
+					 String username= reader.nextLine();
+					
+					 String s = "SELECT username , INTERNET_PACKAGE FROM customer WHERE username = ? ";
+					 
+					 PreparedStatement ps = c.prepareStatement(s);
+					 ps.setString(1, username);
+					 ResultSet rs = ps.executeQuery();
+					 if(rs.next()) {
+						 swapInternetPackages(rs.getString(2),reader, rs.getString(1));
+						invalidUser= false;
+					 }
+					 else {
+						 System.out.println("Username or password is wrong try again");
+						 invalidUser =  true;
+					}
+				}
 		}
+		catch (SQLException e) {
+			// TODO: handle exception
+		}
+		finally{
+			c.close();
+		}
+		
 	}
-	
 	public static void swapInternetPackages(String internetPackage,Scanner reader,String username) throws SQLException {
-		ConnectionToDatabse cd = new ConnectionToDatabse();
-		Connection c = cd.getCon();
-		List<String> availablePackagesForUser = new ArrayList<String>();
-		String s1 = "Select name from internet_package";
-		PreparedStatement ps = c.prepareStatement(s1);
-		ResultSet rs = ps.executeQuery();
-		
-		for(int x= 0; rs.next() ; x++) {
-			String s2 = rs.getString(1);
-			if(!s2.equals(internetPackage)) {
-				availablePackagesForUser.add(s2);
+		ConnectionToDatabse cd = null;
+		Connection c = null;
+		try {
+			cd = new ConnectionToDatabse();
+			 c = cd.getCon();
+			List<String> availablePackagesForUser = new ArrayList<String>();
+			String s1 = "Select name from internet_package";
+			PreparedStatement ps = c.prepareStatement(s1);
+			ResultSet rs = ps.executeQuery();
+			
+			for(int x= 0; rs.next() ; x++) {
+				String s2 = rs.getString(1);
+				if(!s2.equals(internetPackage)) {
+					availablePackagesForUser.add(s2);
+				}
 			}
-		}
-		boolean invalidInput = true;
-		String newPackage = "";
-		while(invalidInput) {
-			System.out.println("-------- Choose one of the following ");
-			for(int x = 0 ;x < availablePackagesForUser.size();x++) {
-				System.out.println("-------- " + (x+1) +":" +availablePackagesForUser.get(x));
+			boolean invalidInput = true;
+			String newPackage = "";
+			while(invalidInput) {
+				System.out.println("-------- Choose one of the following ");
+				for(int x = 0 ;x < availablePackagesForUser.size();x++) {
+					System.out.println("-------- " + (x+1) +":" +availablePackagesForUser.get(x));
+				}
+				String userInput = reader.nextLine();
+				switch(userInput) {
+				case "1":
+					newPackage = availablePackagesForUser.get(0);
+					invalidInput = false;
+					break;
+				case "2":
+					newPackage = availablePackagesForUser.get(1);
+					invalidInput = false;
+					break;
+				case "3":
+					newPackage = availablePackagesForUser.get(2);
+					invalidInput = false;
+					break;
+				default :
+					System.out.println("Please enter a valid Input");
+					break;
+				}
 			}
-			String userInput = reader.nextLine();
-			switch(userInput) {
-			case "1":
-				newPackage = availablePackagesForUser.get(0);
-				invalidInput = false;
-				break;
-			case "2":
-				newPackage = availablePackagesForUser.get(1);
-				invalidInput = false;
-				break;
-			case "3":
-				newPackage = availablePackagesForUser.get(2);
-				invalidInput = false;
-				break;
-			default :
-				System.out.println("Please enter a valid Input");
-				break;
-			}
-		}
-		CallableStatement callableStatement = c.prepareCall("{call salesAppPack.modifyUserPackage(?, ?)}");
-		callableStatement.setString(1, username);
-		callableStatement.setString(2, newPackage);
-		callableStatement.execute();
-		
+			CallableStatement callableStatement = c.prepareCall("{call salesAppPack.modifyUserPackage(?, ?)}");
+			callableStatement.setString(1, username);
+			callableStatement.setString(2, newPackage);
+			callableStatement.execute();
+			c.commit();
+			
+			System.out.println("Success!!!");
+			
 
 
+			
 		
-	
+		}
+		finally {
+			c.close();
+		}
+		
 		
 		
 	}
@@ -311,7 +387,9 @@ public class MainSalesApp {
 		return internetPackages;
 	}
 	
-	
+	/*
+	 * THis method is used to validate if the sales Rep is a valid user
+	 */
 	public static boolean validSalesRep(String username,String password ,Connection c) throws SQLException {
 		 String s = "SELECT password,salt FROM representative WHERE username = ? ";
 		 
@@ -320,9 +398,7 @@ public class MainSalesApp {
 		 ResultSet rs = ps.executeQuery();
 		 if(rs.next()) {
 			 byte [] b = rs.getBytes(1);
-			 System.out.println(b.length);
 			 String salt = rs.getString(2);
-			System.out.println(salt.length());
 			 byte [] hash = hash(password, salt);
 			 for(int x = 0 ; x < b.length; x++) {
 				 if(b[x]!= hash[x]) {
@@ -340,7 +416,7 @@ public class MainSalesApp {
 		 
 	}
 
-	
+	//This method is used if the database is not filled with hashed users 
 	public static void generateRepresentatives(Connection c) throws SQLException {
 		
 		  String [] users = { "yanik", "mohammed", "alpha","hello"};
@@ -368,18 +444,9 @@ public class MainSalesApp {
 	public static String getSalt(){
 		return new BigInteger(140, rand).toString(32);
 	}
-	
-	//Takes a password and a salt a performs a one way hashing on them, returning an array of bytes.
 	public static byte[] hash(String password, String salt){
 		try{
 			SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-	        
-			/*When defining the keyspec, in addition to passing in the password and salt, we also pass in
-			a number of iterations (1024) and a key size (256). The number of iterations, 1024, is the
-			number of times we perform our hashing function on the input. Normally, you could increase security
-			further by using a different number of iterations for each user (in the same way you use a different
-			salt for each user) and storing that number of iterations. Here, we just use a constant number of
-			iterations. The key size is the number of bits we want in the output hash*/ 
 			PBEKeySpec spec = new PBEKeySpec( password.toCharArray(), salt.getBytes(), 1024, 256 );
 
 			SecretKey key = skf.generateSecret( spec );
