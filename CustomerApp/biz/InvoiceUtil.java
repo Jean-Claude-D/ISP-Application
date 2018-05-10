@@ -131,4 +131,57 @@ public final class InvoiceUtil {
 			throw exc;
 		}
 	}
+	
+	public Payment[] getPayments(int invoice) throws SQLException {
+		try(Connection conn = ConnectionUtil.getConnection(false)) {
+			CallableStatement getPaymentFunc = conn.prepareCall(
+				"{? = call CUSTOMER_PCKG.GET_PAYMENTS(?)}"
+			);
+			getPaymentFunc.registerOutParameter(1, OracleTypes.CURSOR);
+			getPaymentFunc.setInt(2, invoice);
+			
+			getPaymentFunc.execute();
+			
+			Payment[] paymentArr = new Payment[0];
+			try(ResultSet paymentRS = (ResultSet) getPaymentFunc.getObject(1)) {
+				LinkedList<Payment> payments = new LinkedList<Payment>();
+				
+				while(paymentRS.next()) {
+					payments.add(new Payment(
+						paymentRS.getDate("DATE_PAID"),
+						paymentRS.getDouble("AMOUNT_PAID")
+					));
+				}
+				
+				payments.toArray(paymentArr);
+			}
+			catch(SQLException exc) {
+				ConnectionUtil.rollback(conn, 15);
+			}
+			
+			conn.commit();
+			
+			return paymentArr;
+		}
+		catch(SQLException exc) {
+			throw exc;
+		}
+	}
+	
+	public boolean payInvoice(int invoice, double amount) throws SQLException {
+		try(Connection conn = ConnectionUtil.getConnection(false)) {
+			CallableStatement payFunc = conn.prepareCall(
+				"{? = call CUSTOMER_PCKG.PAY(?,?)}"
+			);
+			payFunc.registerOutParameter(1, Types.INTEGER);
+			payFunc.setInt(2, invoice);
+			payFunc.setDouble(2, amount);
+			
+			payFunc.execute();
+			return payFunc.getInt(1) != 0;
+		}
+		catch(SQLException exc) {
+			throw exc;
+		}
+	}
 }
