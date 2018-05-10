@@ -109,17 +109,17 @@ CREATE OR REPLACE PACKAGE CUSTOMER_PCKG IS
 		IN_AMOUNT IN NUMBER
 	);
 	
+	/* ======================================== */
+	/* ======================================== */
+	/* ========== SERVICE MANAGEMENT ========== */
+	/* ======================================== */
+	/* ======================================== */
 	TYPE REMIND_CURS IS REF CURSOR RETURN REMINDER%ROWTYPE;
 	/* GET REMINDERS ADDRESSED TO A CUSTOMER BY A REPRESENTATIVE */
 	FUNCTION GET_REMINDERS (
 		IN_CUSTOMER IN NUMBER
 	) RETURN REMIND_CURS;
 	
-	/* ======================================== */
-	/* ======================================== */
-	/* ========== SERVICE MANAGEMENT ========== */
-	/* ======================================== */
-	/* ======================================== */
 	/* CREATES A NEW SERVICE REQUEST FOR A CUSTOMER */
 	PROCEDURE REQUEST_SERVICE (
 		IN_CUSTOMER IN VARCHAR2,
@@ -419,6 +419,11 @@ CREATE OR REPLACE PACKAGE BODY CUSTOMER_PCKG IS
 		END IF;
 	END;
 	
+	/* ======================================== */
+	/* ======================================== */
+	/* ========== SERVICE MANAGEMENT ========== */
+	/* ======================================== */
+	/* ======================================== */
 	FUNCTION GET_REMINDERS (
 		IN_CUSTOMER IN NUMBER
 	) RETURN REMIND_CURS AS
@@ -432,11 +437,6 @@ CREATE OR REPLACE PACKAGE BODY CUSTOMER_PCKG IS
 		RETURN V_REMIND;
 	END;
 	
-	/* ======================================== */
-	/* ======================================== */
-	/* ========== SERVICE MANAGEMENT ========== */
-	/* ======================================== */
-	/* ======================================== */
 	PROCEDURE REQUEST_SERVICE (
 		IN_CUSTOMER IN VARCHAR2,
 		IN_DATE IN DATE,
