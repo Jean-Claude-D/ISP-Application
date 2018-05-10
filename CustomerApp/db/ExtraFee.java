@@ -1,4 +1,4 @@
-package biz;
+package db;
 
 public final class ExtraFee {
 	public String name;

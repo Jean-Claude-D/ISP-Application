@@ -5,6 +5,13 @@ import java.util.Scanner;
 import java.util.function.Predicate;
 import java.util.function.Function;
 
+import db.*;
+import lib.*;
+import app.*;
+import biz.*;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public final class UserInputUtil {
 	private static final Scanner READ = new Scanner(System.in);
@@ -32,6 +39,21 @@ public final class UserInputUtil {
 		}while(!isValid);
 		
 		return parse.apply(userInput);
+	}
+	
+	public static Date getValidDate(String message) {
+		return getValidInput(message,
+			"Must enter a valid Date (yyyy-MM-dd HH:mm)",
+			(input) -> {
+				SimpleDateFormat validDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				try{validDate.parse(input);}
+				catch(ParseException exc) {return false;}
+				return true;
+			},
+			(input) -> {
+				return Date.valueOf(input);
+			}
+		);
 	}
 	
 	public static String getStringInput(String message, String expected, Predicate<String> p) {

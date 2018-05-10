@@ -1,4 +1,4 @@
-package biz;
+package db;
 
 public final class ExtraFeature {
 	public String name;

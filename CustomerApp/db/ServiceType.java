@@ -1,4 +1,4 @@
-package biz;
+package db;
 
 public enum ServiceType {
 	UPGRADE_PACK("SALES", "Upgrading your Package"), TECHNICAL_HELP("TECH", "Get Technical Help"), INSTALLATION("TECH", "Have an Installation"), BILL_QUESTION("BILL", "Any Question Related to your Bill");

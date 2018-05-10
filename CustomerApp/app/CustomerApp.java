@@ -2,16 +2,10 @@ package app;
 
 import java.sql.*;
 import oracle.jdbc.driver.OracleDriver;
-
-import biz.Customer;
-import biz.CustomerUtil;
-import biz.InternetPackage;
-import biz.InternetPackageUtil;
-
-import lib.UserInputUtil;
-import lib.ConnectionUtil;
-
-import lib.SecurityUtil;
+import db.*;
+import lib.*;
+import app.*;
+import biz.*;
 
 public final class CustomerApp {
 	public static final String LOCATION = "localhost";
@@ -34,45 +28,22 @@ public final class CustomerApp {
 		}
 		
 		char userInput = (char) 0;
-		String loginError = "Invalid username/password : denied";
 		
 		do {
 			/* As long as the customer is not logged in, the application will keep asking */
 			if(app.userLogged == null) {
-				String username = UserInputUtil.getStringInput(
-					"Please enter your username"
-				);
-				String password = UserInputUtil.getStringInput(
-					"Please enter your password"
-				);
+				app.userLogged = AppLogic.login();
 				
-				String salt = null;
-				try {
-					salt = CustomerUtil.getSalt(username);
-				}
-				catch(SQLException exc) {
-				}
-				
-				if(salt != null) {
-					byte[] hashedPassword = SecurityUtil.hash(
-						password, salt, 32
-					);
-					
-					try {
-						app.userLogged = CustomerUtil.login(
-							username, hashedPassword
-						);
-						System.out.println("logged");
-					}
-					catch(SQLException exc) {
-						System.err.println(loginError);
-					}
+				if(app.userLogged == null) {
+					System.out.println("Login Successful");
 				}
 				else {
-					System.err.println(loginError);
+					System.out.println("Login Denied");
 				}
 			}
 			else {
+				AppLogic.printInitReminders(app.userLogged);
+				
 				userInput = UserInputUtil.getValidInput(
 					app.printMenu() + "Please enter your choice",
 					"Must be a single character",
@@ -85,13 +56,34 @@ public final class CustomerApp {
 						app.userLogged = null;
 						break;
 					case '2':
-						app.changePassword();
+						AppLogic.changePassword(app.userLogged);
 						break;
 					case '3':
-						app.printPackages();
+						AppLogic.printPackages(app.userLogged);
 						break;
 					case '4':
-						app.upgradePackage();
+						AppLogic.upgradePackage(app.userLogged);
+						break;
+					case '5':
+						AppLogic.printInvoices(app.userLogged);
+						break;
+					case '6':
+						AppLogic.printUsage(app.userLogged);
+						break;
+					case '7':
+						AppLogic.printPayments();
+						break;
+					case '8':
+						AppLogic.payInvoice();
+						break;
+					case '9':
+						AppLogic.printReminders(app.userLogged);
+						break;
+					case 'A':
+						AppLogic.requestAService(app.userLogged);
+						break;
+					case 'B':
+						AppLogic.seeAcceptedAppointments(app.userLogged);
 						break;
 					case 'q':
 						System.out.println("Goodbye!");
@@ -114,89 +106,19 @@ public final class CustomerApp {
 	}
 	
 	private String printMenu() {
-		return "";
-	}
-	
-	private void changePassword() {
-		String salt = null;
-		try {
-			salt = CustomerUtil.getSalt(this.userLogged.username);
-		}
-		catch(SQLException exc) {
-			System.err.println("Could not perform the action");
-		}
-		
-		String password = UserInputUtil.getStringInput(
-			"Please enter your old password"
-		);
-		byte[] hashedPassword = SecurityUtil.hash(password, salt, 32);
-		
-		String newPassword = UserInputUtil.getStringInput(
-			"Please enter your new password"
-		);
-		String confirmPassword = UserInputUtil.getStringInput(
-			"Please confirm your new password"
-		);
-		
-		if(newPassword.equals(confirmPassword)) {
-			String newSalt = SecurityUtil.getSalt(30);
-			byte[] hashedNewPassword = SecurityUtil.hash(newPassword, newSalt, 32);
-			
-			boolean changeSuccess = false;
-			try {
-				changeSuccess = CustomerUtil.changePassword(this.userLogged.username, hashedPassword, hashedNewPassword, newSalt);
-			}
-			catch(SQLException exc) {
-				System.out.println(exc);
-			}
-			
-			if(changeSuccess) {
-				System.out.println("Change succeeded");
-			}
-			else {
-				System.out.println("Change failed");
-			}
-		}
-		else {
-			System.err.println("Passwords do not match");
-		}
-	}
-	
-	private void printPackages() {
-		try {
-			InternetPackage[] packs = InternetPackageUtil.getPackagesFor(userLogged.username);
-			
-			if(packs.length == 0) {
-				System.out.println("No internet package available");
-			}
-			else {
-				for(InternetPackage pack : packs) {
-					System.out.println(pack);
-				}
-			}
-		}
-		catch(SQLException exc) {
-			System.out.println("Could not retrieve internet packages");
-		}
-	}
-	
-	private void upgradePackage() {
-		String packageName = UserInputUtil.getStringInput(
-			"Please enter the package you want to get"
-		);
-		
-		try {
-			boolean upgraded = InternetPackageUtil.upgradePackage(userLogged.username, packageName);
-			if(upgraded) {
-				System.out.println("Upgrade successful");
-			}
-			else {
-				System.out.println("Upgrade unsuccessful");
-			}
-		}
-		catch(SQLException exc) {
-			System.out.println("Could not perform the upgrade");
-		}
+		return
+		"1\tLogoff\n" +
+		"2\tChange Password\n" +
+		"3\tView Available Packages\n" +
+		"4\tUpgrade Package\n" +
+		"5\tPrint your Invoices\n" +
+		"6\tPrint your Usage\n" +
+		"7\tPrint your Previous Payments\n" +
+		"8\tPay an Invoice\n" +
+		"9\tPrint Reminders addressed to you\n" +
+		"A\tRequest Technical Support\n" +
+		"B\tSee all Confirmed Appointments\n" +
+		"q\tExit the Application";
 	}
 }
 
