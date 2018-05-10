@@ -36,3 +36,10 @@ When logged in, billing representatives may:
 +    Modify customer's invoice (refund and postpone).  
 +    Create financial reports (service expenses, profits and revenues).  
 +    Create invoice reminders.  
+
+
+##UserInformation when loging into the billing and representatives applications
++	Username: yanik Password:Yankolo
++	Username: mohammed Password:momo
++	Username: alpha	Password:niska
++	Username: hello Password:world
